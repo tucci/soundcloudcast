@@ -1,0 +1,51 @@
+{
+    "name": "Soundcloud Cast",
+    "description": "Cast Soundcloud to your Chromecast",
+    "author": "Steven Tucci",
+    "version": "2.0",
+    "manifest_version": 2,
+    "icons": {
+        "16": "sc_square_16.png",
+        "48": "sc_square_52.png",
+        "128": "sc_square_120.png"
+    },
+    "permissions": [
+        "tabs",
+        "http://soundcloud.com/*",
+        "https://soundcloud.com/*",
+        "http://www.soundcloud.com/*",
+        "https://www.soundcloud.com/*",
+        "http://*.sndcdn.com/*",
+        "https://*.sndcdn.com/*"
+    ],
+    "options_page": "",
+    "page_action": {
+        "default_name": "Soundcloud cast"
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "app/inject/inject.js"
+            ],
+            "css": [
+                "app/inject/styles.css"
+            ],
+            "matches": [
+                "http://soundcloud.com/*",
+                "http://www.soundcloud.com/*",
+                "https://soundcloud.com/*",
+                "https://www.soundcloud.com/*"
+            ]
+        }
+    ],
+    "background": {
+        "persistent": true,
+        "page": "app/background/background.html"
+    },
+    "web_accessible_resources": [
+        "app/inject/img/*.svg",
+        "app/inject/*.js",
+        "app/inject/*.css"
+    ],
+    "content_security_policy": "script-src 'self'; object-src 'self'"
+}

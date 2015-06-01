@@ -1,0 +1,447 @@
+<html>
+  <head>
+    <title>Chromecast for Soundcloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+  </head>
+  <body>
+      <!-- Styling the receiver -->
+    <style type="text/css">
+         body{
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            color: white;
+            overflow: hidden;
+          }
+
+          .idle {
+            background: url(https://www.googledrive.com/host/0BwL_w4ZzSgAIRFZzTERtVnRYMFE) center center no-repeat, linear-gradient(to bottom, #ff8800 0%,#ff3300 100%);
+          }
+
+          #contextBox {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            text-align: center;
+          }
+
+          .mediaBackgroundImage {
+            position: fixed;
+            left: 0;
+            right: 0;
+            z-index: 1;
+            display: block;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            -webkit-filter: blur(10px);
+            filter: blur(10px);
+            /* force hardware acceleration */
+            transform: translate3d(0, 0, 0) ;
+            -webkit-transform: translate3d(0, 0, 0);
+          }
+
+          .mediaBox {
+            display: -ms-flex;
+            display: -webkit-flex;
+            display: flex;
+            color:white;
+            z-index: 9999;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 85%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            /* When the content is loaded we will change the visibility */
+            visibility: hidden;
+          }
+
+          .mediaImage{
+            width: 100%;
+          }
+
+          .mediaTitle {
+            font-size: 28px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+          }
+
+          .mediaArtist {
+            font-size: 24px;
+            margin-top: 0px;
+            margin-bottom: 30px;
+
+          }
+
+          .mediaMetadata {
+            align-self: center;
+            padding-left: 50px;
+            width: 60%;
+          }
+          .mediaTimeTicker {
+              display: flex;
+              margin-bottom: 0px;
+          }
+
+          .mediaCurrentTime {
+              margin-left: 5%;
+              font-size:18px;
+          }
+
+          .mediaDuration {
+              margin-left: auto;
+              font-size:18px;
+          }
+
+          .mediaControls {
+              display: flex;
+          }
+
+          .mediaSeekBar {
+              background-color: rgba(255,255,255, 0.3);
+              height: 16px;
+              width: 95%;
+              clear: both;
+          }
+
+          .mediaCurrentProgress {
+              height:100%;
+              background-color: #f50;
+          }
+
+          .icon {
+              display: inline-block;
+              position: relative;
+              vertical-align: top;
+              width: 5%;
+          }
+          .icon:after, .icon:before {
+              border: 2px solid #FFF;
+              content: '';
+              position: absolute;
+          }
+
+          .play-icon:after, .play-icon:before {
+
+          }
+
+          .play-icon:before {
+              border: none;
+              background:none;
+          }
+          .play-icon:after {
+              border-bottom: 8px solid transparent;
+              border-left: 13px solid #FFF;
+              border-right: 13px solid transparent;
+              border-top: 8px solid transparent;
+              height: 0;
+              width: 0;
+          }
+
+          .pause-icon:after, .pause-icon:before {
+              height: 11px;
+              width: 0;
+          }
+
+          .pause-icon:before {
+
+          }
+
+          .pause-icon:after {
+              left: 7px;
+          }
+
+          .text-shadow {
+              text-shadow: 0px 1px 1px #969696;
+          }
+
+          .loader {
+            font-size: 10px;
+            position: relative;
+            text-indent: -9999em;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            border-left: 2px solid #ffffff;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation: loadAnim 1.1s infinite linear;
+            animation: loadAnim 1.1s infinite linear;
+          }
+          .loader,
+          .loader:after {
+            border-radius: 50%;
+            width: 2%;
+            margin-right: 2.5%;
+            
+          }
+          @-webkit-keyframes loadAnim {
+            0% {
+              -webkit-transform: rotate(0deg);
+              transform: rotate(0deg);
+            }
+            100% {
+              -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+            }
+          }
+          @keyframes loadAnim {
+            0% {
+              -webkit-transform: rotate(0deg);
+              transform: rotate(0deg);
+            }
+            100% {
+              -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+            }
+          }
+    </style>
+      <div id="contextBox">
+        <h3 id="message"></h3>
+      </div>
+
+      <audio id="media"></audio>
+      <div class="mediaBackgroundImage"></div>
+      <div class="mediaBox">
+        <div class="mediaImageWrapper">
+          <img class="mediaImage" src="">
+        </div>
+
+        <div class="mediaMetadata">
+          <h3 class="mediaTitle text-shadow"></h3>
+          <h5 class="mediaArtist text-shadow"></h5>
+          <p class="mediaTimeTicker">
+              <span class="mediaCurrentTime text-shadow"></span>
+              <span class="mediaDuration text-shadow"></span>
+          </p>
+          <div class="mediaControls">
+              <span class="mediaIcon icon"></span>
+              <div class="mediaSeekBar">
+                <div class="mediaCurrentProgress"></div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+    <script>
+          'use strict';
+          // Cache the soundcloud image before the splash screen is loaded
+          var soundcloudImageCache = new Image();
+          soundcloudImageCache.src = 'https://www.googledrive.com/host/0BwL_w4ZzSgAIRFZzTERtVnRYMFE';
+
+          var mediaElement = document.getElementById('media');
+          var mediaManager = new cast.receiver.MediaManager(mediaElement);
+          var castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+          var messageBus = castReceiverManager.getCastMessageBus('urn:x-cast:com.soundcloud.cast');
+
+          var selectors = {
+              'contextBox' : document.querySelector('#contextBox'),
+              'message' : document.querySelector('#message'),
+              'media': document.querySelector('#media'),
+              'mediaBox': document.querySelector('.mediaBox'),
+              'mediaBackgroundImage': document.querySelector('.mediaBackgroundImage'),
+              'mediaImage' : document.querySelector('.mediaImage'),
+              'mediaTitle': document.querySelector('.mediaTitle'),
+              'mediaArtist': document.querySelector('.mediaArtist'),
+              'mediaIcon': document.querySelector('.mediaIcon'),
+              'mediaSeekBar': document.querySelector('.mediaSeekBar'),
+              'mediaCurrentTime': document.querySelector('.mediaCurrentTime'),
+              'mediaDuration': document.querySelector('.mediaDuration'),
+              'mediaCurrentProgress': document.querySelector('.mediaCurrentProgress')
+          };
+
+          //cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
+
+          castReceiverManager.onReady = function () {
+            console.log('onReady');
+            toggleIdleUi(true, '');
+          };
+
+          castReceiverManager.onSenderDisconnected = function(event) {
+             if(window.castReceiverManager.getSenders().length === 0 && event.reason === cast.receiver.system.DisconnectReason.REQUESTED_BY_SENDER) {
+              console.log('onSenderDisconnected');
+              window.close();
+            }
+          };
+
+          messageBus.onMessage = function(event) {
+            console.log('messageBus: onMessage');
+            var receivedMessage = JSON.parse(event.data);
+            console.log(receivedMessage);
+            if (!receivedMessage.receiverState.track.streamable) {
+              toggleIdleUi(true, 'Can\'t stream \'' + receivedMessage.receiverState.track.title + '\'');
+            }
+          };
+
+          mediaManager.origOnMetadataLoaded = mediaManager.onMetadataLoaded;
+          mediaManager.onMetadataLoaded = function(event) {
+              // add the loading indicator
+              toggleSongLoadingUi(true);
+              console.log('onMetadataLoaded');
+              mediaManager.origOnMetadataLoaded(event);
+              loadMetadataUi(event.message.media);
+
+          };
+
+          mediaManager.origOnLoadMetadataError = mediaManager.onLoadMetadataError;
+          mediaManager.onLoadMetadataError = function(event) {
+            console.log('onLoadMetadataError');
+            mediaManager.origOnLoadMetadataError(event);
+            console.log(event);
+            toggleIdleUi(true, 'Can\'t stream \'' + event.message.media.metadata.title + '\'');
+          };
+
+          mediaManager.origOnPlay = mediaManager.onPlay;
+          mediaManager.onPlay = function(event) {
+              console.log('onPlay');
+              mediaManager.origOnPlay(event);
+              toggleMediaIcon('play-icon');
+          };
+
+          mediaManager.origOnPause = mediaManager.onPause;
+          mediaManager.onPause = function(event) {
+              console.log('onPause');
+              mediaManager.origOnPause(event);
+              toggleMediaIcon('pause-icon');
+          };
+
+          mediaManager.origOnSeek = mediaManager.onSeek;
+          mediaManager.onSeek = function(event) {
+              console.log('onSeek');
+              mediaManager.origOnSeek(event);
+              console.log(event);
+              updateProgress();
+          };
+
+          mediaManager.origOnEnded = mediaManager.onEnded;
+          mediaManager.onEnded = function(event) {
+              console.log('onEnded');
+              console.log(event);
+              mediaManager.origOnEnded(event);
+          };
+
+          function loadMetadataUi(media) {
+            console.log('updateMetadataUi');
+            // Remove the idle screen
+            toggleIdleUi(false, false);
+
+            var mediaMetadata = media.metadata;
+            var artwork_url = mediaMetadata.images[0].url;
+            var background = 'url(\'' + artwork_url + '\')';
+            var isUsingDefaultBackground = false;
+            if (!artwork_url) {
+              // Use the default artwork
+              artwork_url = 'https://www.googledrive.com/host/0BwL_w4ZzSgAIT25wRHByNzBIemc';
+              background = '#333333';
+              isUsingDefaultBackground = true;
+            }
+
+            // Only load ui when the image is finished loading
+            selectors.mediaImage.onload = function() {
+              // This allows the background-size to be applied
+              if (isUsingDefaultBackground) {
+                selectors.mediaBackgroundImage.style.backgroundColor = background;
+              } else {
+                selectors.mediaBackgroundImage.style.backgroundImage = background;
+              }
+
+              selectors.mediaTitle.textContent = mediaMetadata.title;
+              selectors.mediaArtist.textContent = mediaMetadata.artist;
+              selectors.mediaDuration.textContent = formatSeconds(media.duration);
+              // attach listener for the audio element to automatically update the progress bar
+              selectors.media.ontimeupdate = updateProgress;
+              // remove the loading indicator
+              toggleSongLoadingUi(false);
+              // Since we have autoplay on, we'll automatically add the play icon
+              toggleMediaIcon('play-icon');
+              selectors.mediaBackgroundImage.style.visibility = 'visible';
+              // Make the content visible on the receiver screen
+              selectors.mediaBox.style.visibility = 'visible';
+
+            };
+            selectors.mediaImage.src = artwork_url;
+            // Call onload if the image is cached
+            if (selectors.mediaImage.complete) {
+              selectors.mediaImage.onload();
+            }
+          }
+
+          // Utility and ui functions
+          // ------------------------
+          function updateProgress() {
+              var currentTime = selectors.media.currentTime;
+              var percent = 100 * (currentTime / selectors.media.duration);
+              selectors.mediaCurrentProgress.style.width = percent + "%";
+              selectors.mediaCurrentTime.textContent = formatSeconds(currentTime);
+          }
+          
+          function formatSeconds(seconds) {
+              seconds = Number(seconds);
+              var h = Math.floor(seconds / 3600);
+              var m = Math.floor(seconds % 3600 / 60);
+              var s = Math.floor(seconds % 3600 % 60);
+              return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "")+ m + ":" + (s < 10 ? "0" : "") + s);
+          }
+
+          function toggleIdleUi(visible, message) {
+            if (visible) {
+              document.body.classList.add('idle');
+              selectors.mediaBackgroundImage.style.visibility = 'hidden';
+              selectors.mediaBox.style.visibility = 'hidden';
+              selectors.contextBox.style.visibility = 'visible';
+              if (message) {
+                selectors.message.style.visibility = 'visible';
+                selectors.message.textContent = message;
+              } else {
+                selectors.message.style.visibility = 'hidden';
+                selectors.message.textContent = '';
+              }
+
+            } else {
+              document.body.classList.remove('idle');
+              selectors.contextBox.style.visibility = 'hidden';
+              // hide the message
+              selectors.message.textContent = '';
+              selectors.message.style.visibility = 'hidden';
+            }
+          }
+
+          function toggleSongLoadingUi(visible) {
+            if (visible) {
+              // remove all the play/pause icons
+              selectors.mediaIcon.classList.remove('icon');
+              selectors.mediaIcon.classList.remove('play-icon');
+              selectors.mediaIcon.classList.remove('pause-icon');
+              selectors.mediaIcon.classList.add('loader');
+            } else {
+              selectors.mediaIcon.classList.remove('loader');
+            }
+          }
+
+          function toggleMediaIcon(playPauseClass) {
+            // make sure the load icon is off
+            toggleSongLoadingUi(false);
+            if (playPauseClass === 'play-icon') {
+              selectors.mediaIcon.classList.remove('pause-icon');
+            } else if (playPauseClass === 'pause-icon') {
+              selectors.mediaIcon.classList.remove('play-icon');
+            }
+            selectors.mediaIcon.classList.add('icon');
+            selectors.mediaIcon.classList.add(playPauseClass);
+          }
+
+          var appConfig = new cast.receiver.CastReceiverManager.Config();
+          // After 2 minutes of inactivity, we should disconnect
+          appConfig.maxInactivity = 120;
+          appConfig.statusText = 'Ready to play';
+          castReceiverManager.start(appConfig);
+
+    </script>
+  </body>
+</html>

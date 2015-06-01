@@ -1,0 +1,56 @@
+.playControls__chromecast {
+    float: left;
+    margin-right: 20px;
+}
+
+.castControl {
+    width: 19px;
+    height: 46px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    transition: box-shadow 200ms;
+}
+
+.castControl:focus {
+    outline: none;
+}
+
+.castControl::before, .castControl::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 19px;
+    height: 46px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    cursor: pointer;
+    transition: opacity 200ms;
+}
+
+
+.castControl::before {
+    background-image: url("chrome-extension://__MSG_@@extension_id__/app/inject/img/ic_cast_24dp.svg");
+    opacity: 0.5;
+}
+
+.castControl::after {
+    background-image: url("chrome-extension://__MSG_@@extension_id__/app/inject/img/ic_cast_connected_24dp.svg");
+    opacity: 0;
+}
+
+.casting::before {
+    opacity: 0;
+}
+
+.casting::after {
+    opacity: 0.5;
+}
+
+/*
+ Override the stlying for the play pause skip to give spacing for the chromecast icon
+*/
+.playControls__playPauseSkip {
+    margin: 0 30px 0 10px !important;
+}
