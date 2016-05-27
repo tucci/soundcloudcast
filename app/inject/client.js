@@ -131,6 +131,7 @@
  */
     function updateClient(receiverState) {
         if (receiverState.isCasting) {
+            muteTab(true);
             selectors.cast.classList.add('casting');
             var playPauseButton = selectors.playPause;
             // Update our context
@@ -149,6 +150,7 @@
                 
             }
         } else {
+            muteTab(false);
             selectors.cast.classList.remove('casting');
         }
     }
@@ -192,6 +194,11 @@
             seconds = (+time[0]) * 1;
         }
         return seconds;
+    }
+
+    function muteTab(isMuted) {
+       chrome.runtime.sendMessage('ladhdfnaobggbpleommmkabncgenacho', {isMuteEvent: true, muteValue: isMuted}, function(response) {
+        });
     }
     
     // attach a listener to receive updates from soundcloudcast

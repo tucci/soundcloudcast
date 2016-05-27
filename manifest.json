@@ -2,7 +2,7 @@
     "name": "Soundcloud Cast",
     "description": "Cast Soundcloud to your Chromecast",
     "author": "Steven Tucci",
-    "version": "2.2",
+    "version": "2.3",
     "manifest_version": 2,
     "icons": {
         "16": "sc_square_16.png",
@@ -38,6 +38,9 @@
             ]
         }
     ],
+    "externally_connectable": {
+        "matches": ["*://*.soundcloud.com/*"]
+    },
     "background": {
         "persistent": true,
         "page": "app/background/background.html"
