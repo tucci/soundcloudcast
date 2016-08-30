@@ -16,7 +16,7 @@
           }
 
           .idle {
-            background: url(https://www.googledrive.com/host/0BwL_w4ZzSgAIRFZzTERtVnRYMFE) center center no-repeat, linear-gradient(to bottom, #ff8800 0%,#ff3300 100%);
+            background: url(https://tucci.github.io/soundcloudcast/receiver/sc_st_white_460x290.png) center center no-repeat, linear-gradient(to bottom, #ff8800 0%,#ff3300 100%);
           }
 
           #contextBox {
@@ -237,7 +237,7 @@
           'use strict';
           // Cache the soundcloud image before the splash screen is loaded
           var soundcloudImageCache = new Image();
-          soundcloudImageCache.src = 'https://www.googledrive.com/host/0BwL_w4ZzSgAIRFZzTERtVnRYMFE';
+          soundcloudImageCache.src = 'https://tucci.github.io/soundcloudcast/receiver/sc_st_white_460x290.png';
 
           var mediaElement = document.getElementById('media');
           var mediaManager = new cast.receiver.MediaManager(mediaElement);
@@ -341,7 +341,7 @@
             var isUsingDefaultBackground = false;
             if (!artwork_url) {
               // Use the default artwork
-              artwork_url = 'https://www.googledrive.com/host/0BwL_w4ZzSgAIT25wRHByNzBIemc';
+              artwork_url = 'https://tucci.github.io/soundcloudcast/receiver/sc_square_480.png';
               background = '#333333';
               isUsingDefaultBackground = true;
             }
