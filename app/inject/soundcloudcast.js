@@ -277,6 +277,7 @@
  */
     function sessionListener(e) {
         soundcloudcast.receiverState.isCasting = !!e;
+        soundcloudcast.session = e;
         soundcloudcast.notifyReceiver();
     }
 

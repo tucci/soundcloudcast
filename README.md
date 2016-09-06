@@ -10,6 +10,9 @@ There are still some bugs and some small tweaks I have to fix.
 It's pretty much impossible for you test the code on the receiver side because you don't have any access to that
 but if you find something weird on the receiver end, just tweet me or message me.
 
+When testing, make sure to use your own SoundCloud Client ID by setting ```soundcloudClientId``` in soundcloudcast.js. 
+You can get one here http://soundcloud.com/you/apps
+
 If you find any weird bugs either
 - fix it and submit a pull request
 - submit an issue and I'll be happy to fix it
