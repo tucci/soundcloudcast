@@ -30,12 +30,10 @@
         }
 
         // Create and inject the cast button
-        var castButton = document.createElement('li');
-        castButton.className = 'playControls__chromecast';
-        castButton.innerHTML = 
-            '<button title="Cast to chromecast" class="castControl sc-ir">'
-                + 'Cast to chromecast'
-            + '</button>';
+        var castButton = document.createElement('button');
+        castButton.className = 'castControl sc-ir playControls__icon playControls__chromecast playControls__next';
+        castButton.title = 'Cast to chromecast';
+        castButton.innerHTML = 'Cast to chromecast';
 
         // Get the button to where the cast button should be injected into the page
         var repeatButton = document.getElementsByClassName('playControls__repeat')[0];
