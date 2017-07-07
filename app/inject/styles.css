@@ -6,7 +6,7 @@
 .castControl {
     width: 19px;
     height: 46px;
-    margin: 0;
+    margin: 0 0 0 12px;
     padding: 0;
     position: relative;
     transition: box-shadow 200ms;
